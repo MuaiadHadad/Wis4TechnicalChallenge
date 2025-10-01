@@ -3,7 +3,7 @@ services:
     image: nginx:alpine
     container_name: wis4_nginx
     ports:
-      - "80:80"
+      - "88:88"
     volumes:
       # - ./nginx/nginx.conf:/etc/nginx/nginx.conf      - ./frontend:/var/www/html/frontend
       - ./backend:/var/www/html/backend
