@@ -1,51 +1,6 @@
+version: "3.8"
+
 services:
-  nginx:
-    image: nginx:alpine
-    container_name: wis4_nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./frontend:/var/www/html/frontend
-      - ./backend:/var/www/html/backend
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - wis4_network
-
-  backend:
-    build: ./backend
-    container_name: wis4_backend
-    volumes:
-      - ./backend:/var/www/html
-    depends_on:
-      - mariadb
-      - s3ninja
-    networks:
-      - wis4_network
-    environment:
-      - DB_HOST=mariadb
-      - DB_USER=wis4_user
-      - DB_PASS=wis4_password
-      - DB_NAME=wis4_db
-      # S3 config (defaults target S3Ninja; replace for AWS)
-      - S3_ENDPOINT=http://s3ninja:9000
-      - S3_PUBLIC_ENDPOINT=http://localhost:9000
-      - S3_BUCKET=wis4-documents
-      - S3_REGION=us-east-1
-      - S3_KEY=AKIAIOSFODNN7EXAMPLE
-      - S3_SECRET=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-      - S3_USE_PATH_STYLE=true
-
-  frontend:
-    build: ./frontend
-    container_name: wis4_frontend
-    volumes:
-      - ./frontend:/var/www/html
-    networks:
-      - wis4_network
-
   mariadb:
     image: mariadb:10.9
     container_name: wis4_mariadb
@@ -55,12 +10,11 @@ services:
       MYSQL_USER: wis4_user
       MYSQL_PASSWORD: wis4_password
     volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - mariadb_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d   # garante que a pasta existe no repo
     ports:
       - "3306:3306"
-    networks:
-      - wis4_network
+    networks: [wis4_network]
 
   s3ninja:
     image: scireum/s3-ninja
@@ -69,8 +23,41 @@ services:
       - "9000:9000"
     volumes:
       - s3_data:/home/sirius/data
-    networks:
-      - wis4_network
+    networks: [wis4_network]
+
+  backend:
+    build: ./backend
+    image: wis4pro-backend:latest
+    container_name: wis4_backend
+    depends_on: [mariadb, s3ninja]
+    networks: [wis4_network]
+    environment:
+      DB_HOST: mariadb
+      DB_USER: wis4_user
+      DB_PASS: wis4_password
+      DB_NAME: wis4_db
+      S3_ENDPOINT: http://s3ninja:9000
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+      S3_BUCKET: wis4-documents
+      S3_REGION: us-east-1
+      S3_KEY: AKIAIOSFODNN7EXAMPLE
+      S3_SECRET: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      S3_USE_PATH_STYLE: "true"
+
+  frontend:
+    build: ./frontend
+    image: wis4pro-frontend:latest
+    container_name: wis4_frontend
+    networks: [wis4_network]
+
+  nginx:
+    build: ./nginx
+    image: wis4-nginx:latest
+    container_name: wis4_nginx
+    ports:
+      - "80:80"
+    depends_on: [backend, frontend]
+    networks: [wis4_network]
 
 volumes:
   mariadb_data:
