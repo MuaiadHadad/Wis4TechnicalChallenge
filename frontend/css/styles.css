@@ -1,0 +1,68 @@
+/* Global animations and skeleton styles */
+
+/* Fade-in helper for sections */
+.section-enter {
+  animation: fadeInUp 300ms ease both;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Card hover lift */
+.card-hover {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.25rem 1rem rgba(0,0,0,.08);
+}
+
+/* Skeleton loader */
+.skeleton-wrapper {
+  display: block;
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #e9ecef;
+  border-radius: .25rem;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(300%); }
+}
+.skeleton-line { height: 12px; margin: 8px 0; }
+.skeleton-line.lg { height: 16px; }
+.skeleton-line.sm { height: 8px; }
+
+/* Table skeleton */
+.table-skeleton .row-skeleton {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr 2fr 120px 120px 140px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+/* Toast tweaks */
+.toast { box-shadow: 0 .25rem 1rem rgba(0,0,0,.08); }
+
+/* Overlay loader (optional) */
+#pageSpinner {
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.6); z-index: 2000;
+}
+#pageSpinner.show { display: flex; }
+
