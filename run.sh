@@ -14,6 +14,16 @@ else
   exit 1
 fi
 
+# Proactive cleanup to avoid name conflicts
+echo "[0/4] Cleaning up any previous stack (containers only, keep volumes)..."
+set +e
+$DC down --remove-orphans 2>/dev/null
+# Remove any leftover containers with fixed names (in case they were created outside compose)
+for c in wis4_nginx wis4_backend wis4_frontend wis4_mariadb wis4_s3ninja; do
+  docker rm -f "$c" >/dev/null 2>&1 || true
+done
+set -e
+
 echo "[1/4] Building and starting containers..."
 $DC up -d --build
 
@@ -30,6 +40,8 @@ until docker exec "$DB_CONTAINER" sh -c "mysql -u$DB_USER -p$DB_PASS -e 'SELECT 
   retries=$((retries-1))
   if [ $retries -le 0 ]; then
     echo "ERROR: MariaDB did not become ready in time." >&2
+    # Show logs for quick debugging
+    $DC logs --no-color || true
     exit 1
   fi
   sleep "$sleep_between"
@@ -84,4 +96,3 @@ Demo logins:
 
 Tip: To view logs, run: $DC logs --no-color | less
 EOF
-
