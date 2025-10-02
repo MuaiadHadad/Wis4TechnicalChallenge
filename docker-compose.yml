@@ -6,6 +6,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/ssl
       - ./frontend:/var/www/html/frontend
       - ./backend:/var/www/html/backend
     depends_on:
