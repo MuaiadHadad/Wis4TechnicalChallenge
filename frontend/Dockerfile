@@ -21,6 +21,6 @@ RUN chown -R www-data:www-data /var/www/html \
 # Apache configuration
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-EXPOSE 80
+EXPOSE 88
 
 CMD ["apache2-foreground"]
