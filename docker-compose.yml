@@ -31,7 +31,7 @@ services:
       - DB_NAME=wis4_db
       # S3 config (defaults target S3Ninja; replace for AWS)
       - S3_ENDPOINT=http://s3ninja:9000
-      - S3_PUBLIC_ENDPOINT=http://http://206.189.164.118:9000
+      - S3_PUBLIC_ENDPOINT=http://206.189.164.118:9000
       - S3_BUCKET=wis4-documents
       - S3_REGION=us-east-1
       - S3_KEY=AKIAIOSFODNN7EXAMPLE
