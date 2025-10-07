@@ -204,9 +204,14 @@
                     </div>
                     <div class="mb-2"><strong>Status:</strong> <span id="viewTaskStatus"></span></div>
                     <div class="mb-2"><strong>Created:</strong> <span id="viewTaskCreated"></span></div>
-                    <div class="mb-2"><strong>File:</strong> <span id="viewTaskFile">—</span></div>
+                    <div class="mb-2"><strong>File:</strong>
+                        <div id="viewTaskFile" class="mt-1">—</div>
+                    </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" id="downloadTaskFileBtn" class="btn btn-success" style="display: none;" onclick="downloadTaskFile()">
+                        <i class="bi bi-download"></i> Download File
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -222,7 +227,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/auth.js?v=3"></script>
+    <script src="js/dashboard.js?v=3"></script>
 </body>
 </html>

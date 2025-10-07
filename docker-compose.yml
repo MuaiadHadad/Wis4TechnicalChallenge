@@ -7,7 +7,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./frontend:/var/www/html/frontend
-      - ./backend:/var/www/html/backend
+      - ./CodeIgniter4-develop:/var/www/html/backend
     depends_on:
       - backend
       - frontend
@@ -15,10 +15,10 @@ services:
       - wis4_network
 
   backend:
-    build: ./backend
+    build: ./CodeIgniter4-develop
     container_name: wis4_backend
     volumes:
-      - ./backend:/var/www/html
+      - ./CodeIgniter4-develop:/var/www/html
     depends_on:
       - mariadb
       - s3ninja
@@ -31,7 +31,6 @@ services:
       - DB_NAME=wis4_db
       # S3 config (defaults target S3Ninja; replace for AWS)
       - S3_ENDPOINT=http://s3ninja:9000
-      - S3_PUBLIC_ENDPOINT=http://localhost:9000
       - S3_BUCKET=wis4-documents
       - S3_REGION=us-east-1
       - S3_KEY=AKIAIOSFODNN7EXAMPLE
@@ -65,6 +64,7 @@ services:
   s3ninja:
     image: scireum/s3-ninja
     container_name: wis4_s3ninja
+    platform: linux/amd64
     ports:
       - "9000:9000"
     volumes:

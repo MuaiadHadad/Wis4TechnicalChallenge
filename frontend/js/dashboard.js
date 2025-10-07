@@ -309,12 +309,12 @@ function displayMyTasks(tasks) {
                     <p class="card-text">${task.description}</p>
                     <small class="text-muted">Created: ${createdDate}</small>
                     <div class="mt-3">
-                        ${task.status === 'pending' ? 
-                            `<button class="btn btn-success" onclick="showTaskExecutionModal(${task.id}, '${task.task_type}', '${task.description.replace(/'/g, "\\'")}')">
+                        ${task.status === 'pending' ?
+            `<button class="btn btn-success" onclick="showTaskExecutionModal(${task.id}, '${task.task_type}', '${task.description.replace(/'/g, "\\'")}')">
                                 <i class="bi bi-play-circle"></i> Submit Execution
-                            </button>` : 
-                            '<span class="text-success"><i class="bi bi-check-circle"></i> Task completed</span>'
-                        }
+                            </button>` :
+            '<span class="text-success"><i class="bi bi-check-circle"></i> Task completed</span>'
+        }
                     </div>
                 </div>
             </div>
@@ -415,12 +415,14 @@ async function viewTask(taskId) {
         document.getElementById('viewTaskStatus').innerHTML = getStatusBadge(t.status);
         document.getElementById('viewTaskCreated').textContent = new Date(t.created_at).toLocaleString();
         const fileEl = document.getElementById('viewTaskFile');
-        const href = t.execution_file_url || t.execution_file_path;
-        if (href) {
-            fileEl.innerHTML = `<a href="${href}" target="_blank" rel="noopener">${t.execution_file_name || 'View file'}</a>`;
-        } else {
-            fileEl.textContent = '\u2014';
+        fileEl.textContent = '\u2014';
+
+        // Se há ficheiro, usa a API de download em vez de URL direta do S3
+        if (t.execution_id && t.execution_file_name) {
+            const downloadUrl = `/api/executions/download/${t.execution_id}`;
+            fileEl.innerHTML = `<a href="${downloadUrl}" target="_blank" rel="noopener">${t.execution_file_name}</a>`;
         }
+
         const modal = new bootstrap.Modal(document.getElementById('taskViewModal'));
         modal.show();
     } catch (err) {
